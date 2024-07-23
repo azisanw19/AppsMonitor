@@ -1,29 +1,45 @@
+import com.android.ide.common.resources.fileNameToResourceName
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+//    alias(libs.plugins.com.google.gms)
 }
 
 android {
     namespace = "timeline.lizimumu.com.t"
-    compileSdk = 34
+    compileSdk = 29
 
     defaultConfig {
         applicationId = "timeline.lizimumu.com.t"
-        minSdk = 30
-        targetSdk = 34
+        minSdk = 22
+        targetSdk = 29
         versionCode = 29
         versionName = "1.9.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("keystore.jks")
+            storePassword = "app123456"
+            keyAlias = "appkeystore"
+            keyPassword = "app123456"
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isDebuggable = false
+            isJniDebuggable = false
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
