@@ -1,5 +1,3 @@
-import com.android.ide.common.resources.fileNameToResourceName
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -8,7 +6,7 @@ plugins {
 
 android {
     namespace = "timeline.lizimumu.com.t"
-    compileSdk = 29
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "timeline.lizimumu.com.t"
@@ -58,17 +56,15 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("androidx.palette:palette:1.0.0")
-    implementation("com.github.bumptech.glide:glide:4.10.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.10.0")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.palette)
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.bumptech.glide)
+    annotationProcessor(libs.bumptech.glide.compiler)
 
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.vectordrawable:vectordrawable:1.1.0")
-
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

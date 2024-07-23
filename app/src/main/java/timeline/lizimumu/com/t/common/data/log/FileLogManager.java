@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.log;
+package timeline.lizimumu.com.t.common.data.log;
 
 
 import android.os.Environment;

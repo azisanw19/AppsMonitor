@@ -9,6 +9,7 @@ import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.common.data.AppItem;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 
+
 public class IgnoreExecutorViewModel extends ViewModel {
 
     private final DbIgnoreExecutor mdbIgnoreExecutor;
@@ -31,7 +32,7 @@ public class IgnoreExecutorViewModel extends ViewModel {
                     DbIgnoreExecutor.getInstance().insertItem(item);
                 }
             }
-        }).run();
+        }).start();
     }
 
 }

@@ -9,20 +9,30 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import timeline.lizimumu.com.t.R;
+import timeline.lizimumu.com.t.common.presentation.viewModel.IgnoreExecutorViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.feature.appMonitor.presentation.MainActivity;
-import timeline.lizimumu.com.t.log.FileLogManager;
+import timeline.lizimumu.com.t.common.data.log.FileLogManager;
 
 public class SplashActivity extends AppCompatActivity {
+
+    private IgnoreExecutorViewModel ignoreExecutorViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory();
+        ignoreExecutorViewModel = new ViewModelProvider(this, viewModelFactory).get(IgnoreExecutorViewModel.class);
+        ignoreExecutorViewModel.addDefaultIgnoreAppsToDB();
+
         if (checkPermissions().size() == 0) {
             delayEnter();
         } else {

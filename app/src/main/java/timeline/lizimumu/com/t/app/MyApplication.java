@@ -35,24 +35,6 @@ public class MyApplication extends Application {
         DbIgnoreExecutor.init(getApplicationContext());
         DbHistoryExecutor.init(getApplicationContext());
         DataManager.init();
-        addDefaultIgnoreAppsToDB();
         if (AppConst.CRASH_TO_FILE) CrashHandler.getInstance().init();
-    }
-
-    private void addDefaultIgnoreAppsToDB() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<String> mDefaults = new ArrayList<>();
-                mDefaults.add("com.android.settings");
-                mDefaults.add(BuildConfig.APPLICATION_ID);
-                for (String packageName : mDefaults) {
-                    AppItem item = new AppItem();
-                    item.mPackageName = packageName;
-                    item.mEventTime = System.currentTimeMillis();
-                    DbIgnoreExecutor.getInstance().insertItem(item);
-                }
-            }
-        }).run();
     }
 }
