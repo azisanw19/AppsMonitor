@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.data;
+package timeline.lizimumu.com.t.common.data;
 
 import java.util.Locale;
 

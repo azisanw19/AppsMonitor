@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.ui;
+package timeline.lizimumu.com.t.feature.appMonitor.presentation;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -47,13 +47,14 @@ import java.util.Locale;
 
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.data.AppItem;
-import timeline.lizimumu.com.t.data.DataManager;
-import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.data.AppItem;
+import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.feature.settings.presentation.SettingsActivity;
 import timeline.lizimumu.com.t.service.AlarmService;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
-import timeline.lizimumu.com.t.util.PreferenceManager;
+import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.db;
+package timeline.lizimumu.com.t.common.data.source.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import timeline.lizimumu.com.t.data.AppItem;
-import timeline.lizimumu.com.t.data.IgnoreItem;
+import timeline.lizimumu.com.t.common.data.AppItem;
+import timeline.lizimumu.com.t.common.data.IgnoreItem;
 
 /**
  * Database Entry

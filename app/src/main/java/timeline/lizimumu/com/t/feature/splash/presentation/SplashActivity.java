@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.ui;
+package timeline.lizimumu.com.t.feature.splash.presentation;
 
 import android.Manifest;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timeline.lizimumu.com.t.R;
+import timeline.lizimumu.com.t.feature.appMonitor.presentation.MainActivity;
 import timeline.lizimumu.com.t.log.FileLogManager;
 
 public class SplashActivity extends AppCompatActivity {

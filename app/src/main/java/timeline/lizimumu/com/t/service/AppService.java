@@ -8,11 +8,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.data.DataManager;
-import timeline.lizimumu.com.t.ui.MainActivity;
+import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.feature.appMonitor.presentation.MainActivity;
 
 public class AppService extends Service {
 
@@ -27,6 +28,7 @@ public class AppService extends Service {
     private Runnable mRepeatCheckTask = new Runnable() {
         @Override
         public void run() {
+            Log.d("AppService", "mRepeatCheck");
             if (!mManager.hasPermission(mContext)) {
                 mHandler.postDelayed(mRepeatCheckTask, CHECK_INTERVAL);
             } else {

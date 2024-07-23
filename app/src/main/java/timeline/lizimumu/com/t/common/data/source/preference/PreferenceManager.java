@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.util;
+package timeline.lizimumu.com.t.common.data.source.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;

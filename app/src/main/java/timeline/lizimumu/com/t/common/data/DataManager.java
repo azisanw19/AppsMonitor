@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.data;
+package timeline.lizimumu.com.t.common.data;
 
 import android.Manifest;
 import android.app.AppOpsManager;
@@ -29,9 +29,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
-import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 import timeline.lizimumu.com.t.util.AppUtil;
-import timeline.lizimumu.com.t.util.PreferenceManager;
 import timeline.lizimumu.com.t.util.SortEnum;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;

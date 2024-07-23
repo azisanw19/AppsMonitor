@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.db;
+package timeline.lizimumu.com.t.common.data.source.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

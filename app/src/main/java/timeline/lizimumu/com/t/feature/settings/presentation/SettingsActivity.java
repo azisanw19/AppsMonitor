@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.ui;
+package timeline.lizimumu.com.t.feature.settings.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,8 @@ import java.util.Locale;
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.util.PreferenceManager;
+import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
+import timeline.lizimumu.com.t.feature.about.presentation.AboutActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 

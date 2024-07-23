@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.ui;
+package timeline.lizimumu.com.t.feature.settings.presentation;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,8 +24,8 @@ import java.util.Locale;
 
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.data.IgnoreItem;
-import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.data.IgnoreItem;
+import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.util.AppUtil;
 
 public class IgnoreActivity extends AppCompatActivity {

@@ -18,8 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
-            android:launchMode="singleTask" />
+            android:name=".feature.appMonitor.presentation.MainActivity"
+            android:launchMode="singleTask"
+            android:exported="false" />
 
         <service android:name=".service.AppService" />
         <service android:name=".service.AlarmService" />
@@ -32,36 +33,41 @@
         </receiver>
 
         <activity
-            android:name=".ui.SettingsActivity"
-            android:parentActivityName=".ui.MainActivity">
+            android:name=".feature.settings.presentation.SettingsActivity"
+            android:parentActivityName=".feature.appMonitor.presentation.MainActivity"
+            android:exported="false" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
+                android:value=".feature.appMonitor.presentation.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.DetailActivity"
-            android:parentActivityName=".ui.MainActivity">
+            android:name=".feature.appMonitor.presentation.DetailActivity"
+            android:parentActivityName=".feature.appMonitor.presentation.MainActivity"
+            android:exported="false" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
+                android:value=".feature.appMonitor.presentation.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.IgnoreActivity"
-            android:parentActivityName=".ui.SettingsActivity">
+            android:name=".feature.settings.presentation.IgnoreActivity"
+            android:parentActivityName=".feature.settings.presentation.SettingsActivity"
+            android:exported="false" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.SettingsActivity" />
+                android:value=".feature.settings.presentation.SettingsActivity" />
         </activity>
         <activity
-            android:name=".ui.AboutActivity"
-            android:parentActivityName=".ui.SettingsActivity">
+            android:name=".feature.about.presentation.AboutActivity"
+            android:parentActivityName=".feature.settings.presentation.SettingsActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.SettingsActivity" />
+                android:value=".feature.settings.presentation.SettingsActivity" />
         </activity>
         <activity
-            android:name=".ui.SplashActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".feature.splash.presentation.SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.ui;
+package timeline.lizimumu.com.t.feature.appMonitor.presentation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -56,9 +56,9 @@ import java.util.Locale;
 
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.data.AppItem;
-import timeline.lizimumu.com.t.data.DataManager;
-import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.data.AppItem;
+import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.BitmapUtil;
 import timeline.lizimumu.com.t.util.SortEnum;

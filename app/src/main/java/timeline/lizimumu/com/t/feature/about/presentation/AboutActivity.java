@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.ui;
+package timeline.lizimumu.com.t.feature.about.presentation;
 
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
