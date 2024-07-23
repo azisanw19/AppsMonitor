@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.di.AppModule;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
@@ -12,8 +12,10 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(IgnoreExecutorViewModel.class)) {
-            DbIgnoreExecutor dbIgnoreExecutor = DbIgnoreExecutor.getInstance();
-            return (T) new IgnoreExecutorViewModel(dbIgnoreExecutor);
+            return (T) new IgnoreExecutorViewModel(AppModule.getInstance().getMonitoringRepository());
+        }
+        if (modelClass.isAssignableFrom(CheckPermissionDataViewModel.class)) {
+            return (T) new CheckPermissionDataViewModel(AppModule.getInstance().getDataManagerRepository());
         }
 
         return ViewModelProvider.Factory.super.create(modelClass);

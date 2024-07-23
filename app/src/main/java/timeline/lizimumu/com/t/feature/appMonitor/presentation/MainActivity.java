@@ -28,9 +28,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +53,8 @@ import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.common.data.AppItem;
 import timeline.lizimumu.com.t.common.data.DataManager;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.presentation.viewModel.CheckPermissionDataViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.feature.settings.presentation.SettingsActivity;
 import timeline.lizimumu.com.t.service.AlarmService;
 import timeline.lizimumu.com.t.service.AppService;
@@ -70,9 +75,17 @@ public class MainActivity extends AppCompatActivity {
     private int mDay;
     private PackageManager mPackageManager;
 
+    private CheckPermissionDataViewModel checkPermissionDataViewModel;
+    @NonNull
+    private Boolean hasPermission = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory();
+        checkPermissionDataViewModel = new ViewModelProvider(this, viewModelFactory).get(CheckPermissionDataViewModel.class);
+        checkPermissionDataViewModel.hasPermission();
 
         // https://guides.codepath.com/android/Shared-Element-Activity-Transition
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -93,20 +106,25 @@ public class MainActivity extends AppCompatActivity {
         mList.addItemDecoration(dividerItemDecoration);
         mList.setAdapter(mAdapter);
 
-        initLayout();
-        initEvents();
-        initSpinner();
-        initSort();
 
-        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
-            process();
-            startService(new Intent(this, AlarmService.class));
+        observeData();
+    }
+
+    private void setData() {
+        initLayout(hasPermission);
+        initEvents(hasPermission);
+        initSpinner(hasPermission);
+        initSort(hasPermission);
+
+        if (hasPermission) {
+            process(hasPermission);
+            startService(new Intent(MainActivity.this, AlarmService.class));
         }
     }
 
-    private void initLayout() {
+    private void initLayout(Boolean hasPermission) {
         mSwipe = findViewById(R.id.swipe_refresh);
-        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
+        if (hasPermission) {
             mSwitchText.setText(R.string.enable_apps_monitoring);
             mSwitch.setVisibility(View.GONE);
             mSort.setVisibility(View.VISIBLE);
@@ -120,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initSort() {
-        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
+    private void initSort(Boolean hasPermission) {
+        if (hasPermission) {
             mSort.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -138,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
-                        process();
+                        process(hasPermission);
                         mDialog.dismiss();
                     }
                 })
@@ -146,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
         mDialog.show();
     }
 
-    private void initSpinner() {
-        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
+    private void initSpinner(Boolean hasPermission) {
+        if (hasPermission) {
             Spinner spinner = findViewById(R.id.spinner);
             spinner.setVisibility(View.VISIBLE);
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -160,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     if (mDay != i) {
                         int[] values = getResources().getIntArray(R.array.duration_int);
                         mDay = values[i];
-                        process();
+                        process(hasPermission);
                     }
                 }
 
@@ -171,8 +189,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initEvents() {
-        if (!DataManager.getInstance().hasPermission(getApplicationContext())) {
+    private void initEvents(Boolean hasPermission) {
+        if (!hasPermission) {
             mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -187,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                process();
+                process(hasPermission);
             }
         });
     }
@@ -195,7 +213,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!DataManager.getInstance().hasPermission(getApplicationContext())) {
+        checkPermissionDataViewModel.hasPermission();
+        if (!hasPermission) {
             mSwitch.setChecked(false);
         }
     }
@@ -203,18 +222,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (DataManager.getInstance().hasPermission(this)) {
+        if (hasPermission) {
             mSwipe.setEnabled(true);
             mSort.setVisibility(View.VISIBLE);
             mSwitch.setVisibility(View.GONE);
-            initSpinner();
-            initSort();
-            process();
+            initSpinner(hasPermission);
+            initSort(hasPermission);
+            process(hasPermission);
         }
     }
 
-    private void process() {
-        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
+    private void process(Boolean hasPermission) {
+        if (hasPermission) {
             mList.setVisibility(View.INVISIBLE);
             int sortInt = PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT);
             mSortName.setText(getSortName(sortInt));
@@ -232,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
         AppItem info = mAdapter.getItemInfoByPosition(item.getOrder());
         if (item.getItemId() == R.id.ignore) {
             DbIgnoreExecutor.getInstance().insertItem(info);
-            process();
+            process(hasPermission);
             Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
             return true;
         } else if (item.getItemId() == R.id.open) {
@@ -272,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(">>>>>>>>", "result code " + requestCode + " " + resultCode);
-        if (resultCode > 0) process();
+        if (resultCode > 0) process(hasPermission);
     }
 
     @Override
@@ -385,6 +404,16 @@ public class MainActivity extends AppCompatActivity {
                 contextMenu.add(Menu.NONE, R.id.ignore, position, getResources().getString(R.string.ignore));
             }
         }
+    }
+
+    private void observeData() {
+        checkPermissionDataViewModel.hasPermission.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                hasPermission = aBoolean;
+                setData();
+            }
+        });
     }
 
     @SuppressLint("StaticFieldLeak")

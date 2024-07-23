@@ -30,11 +30,19 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         PreferenceManager.init(this);
         getApplicationContext().startService(new Intent(getApplicationContext(), AppService.class));
         DbIgnoreExecutor.init(getApplicationContext());
         DbHistoryExecutor.init(getApplicationContext());
-        DataManager.init();
+        DataManager.init(getApplicationContext());
         if (AppConst.CRASH_TO_FILE) CrashHandler.getInstance().init();
+
+        AppModule.init();
+        AppModule appModule = AppModule.getInstance();
+        appModule.register(PreferenceManager.getInstance());
+        appModule.register(DbIgnoreExecutor.getInstance());
+
+        appModule.register(DataManager.getInstance());
     }
 }

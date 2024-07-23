@@ -44,25 +44,30 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class DataManager {
 
     private static DataManager mInstance;
+    private final Context mContext;
 
-    public static void init() {
-        mInstance = new DataManager();
+    private DataManager(Context context) {
+        mContext = context;
+    }
+
+    public static void init(Context context) {
+        mInstance = new DataManager(context);
     }
 
     public static DataManager getInstance() {
         return mInstance;
     }
 
-    public void requestPermission(Context context) {
+    public void requestPermission() {
         Intent intent = new Intent(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        mContext.startActivity(intent);
     }
 
-    public boolean hasPermission(Context context) {
-        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+    public boolean hasPermission() {
+        AppOpsManager appOps = (AppOpsManager) mContext.getSystemService(Context.APP_OPS_SERVICE);
         if (appOps != null) {
-            int mode = appOps.checkOpNoThrow("android:get_usage_stats", android.os.Process.myUid(), context.getPackageName());
+            int mode = appOps.checkOpNoThrow("android:get_usage_stats", android.os.Process.myUid(), mContext.getPackageName());
             return mode == AppOpsManager.MODE_ALLOWED;
         }
         return false;

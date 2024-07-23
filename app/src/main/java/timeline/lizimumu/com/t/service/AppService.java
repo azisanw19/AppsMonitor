@@ -29,7 +29,7 @@ public class AppService extends Service {
         @Override
         public void run() {
             Log.d("AppService", "mRepeatCheck");
-            if (!mManager.hasPermission(mContext)) {
+            if (!mManager.hasPermission()) {
                 mHandler.postDelayed(mRepeatCheckTask, CHECK_INTERVAL);
             } else {
                 mHandler.removeCallbacks(mRepeatCheckTask);
@@ -46,7 +46,8 @@ public class AppService extends Service {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
-        mManager = new DataManager();
+        DataManager.init(mContext);
+        mManager = DataManager.getInstance();
     }
 
     @Nullable
@@ -82,7 +83,7 @@ public class AppService extends Service {
     private void startIntervalCheck() {
         boolean valid = true;
         try {
-            mManager.requestPermission(mContext);
+            mManager.requestPermission();
         } catch (ActivityNotFoundException e) {
             valid = false;
         }

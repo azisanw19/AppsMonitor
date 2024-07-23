@@ -20,6 +20,7 @@ palette = "1.0.0"
 swiperefreshlayout = "1.1.0"
 glide = "4.16.0"
 lifecycle = "2.8.3"
+rxjava = "3.1.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -63,6 +64,9 @@ bumptech-glide-compiler = { group = "com.github.bumptech.glide", name = "compile
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
+
+# reactive
+reactivex-rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
 
 
 [plugins]

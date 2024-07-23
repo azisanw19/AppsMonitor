@@ -5,8 +5,13 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.common.data.repository.DataManagerRepository;
+import timeline.lizimumu.com.t.common.data.repository.MonitoringRepository;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
+import timeline.lizimumu.com.t.common.domain.repository.DataManagerRepositoryImpl;
+import timeline.lizimumu.com.t.common.domain.repository.MonitoringRepositoryImpl;
 
 public class AppModule {
 
@@ -15,6 +20,8 @@ public class AppModule {
     private static DbIgnoreExecutor mdbIgnoreExecutor = null;
     @Nullable
     private static PreferenceManager mPreferenceManager = null;
+    @Nullable
+    private static DataManager mDataManager = null;
 
     private AppModule() {
 
@@ -48,5 +55,24 @@ public class AppModule {
 
     public void register(PreferenceManager preferenceManager) {
         mPreferenceManager = preferenceManager;
+    }
+
+    public @NonNull DataManager getDataManager() throws RuntimeException {
+        if (mDataManager != null)
+            return mDataManager;
+
+        throw new RuntimeException("DataManager not been registered");
+    }
+
+    public void register(DataManager dataManager) {
+        mDataManager = dataManager;
+    }
+
+    public MonitoringRepository getMonitoringRepository() {
+        return new MonitoringRepositoryImpl(getDbIgnoreExecutor());
+    }
+
+    public DataManagerRepository getDataManagerRepository() {
+        return new DataManagerRepositoryImpl(getDataManager());
     }
 }
