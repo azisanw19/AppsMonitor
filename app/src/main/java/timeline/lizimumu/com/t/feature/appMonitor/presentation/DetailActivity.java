@@ -176,23 +176,22 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.ignore:
-                if (!TextUtils.isEmpty(mPackageName)) {
-                    DbIgnoreExecutor.getInstance().insertItem(mPackageName);
-                    setResult(1);
-                    Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            case R.id.more:
-                openDetail();
-                return true;
-            case android.R.id.home:
-                supportFinishAfterTransition();
-                Log.d(">>>>====----> Detail", "onOptionsItemSelected.android.R.id.home");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.ignore) {
+            if (!TextUtils.isEmpty(mPackageName)) {
+                DbIgnoreExecutor.getInstance().insertItem(mPackageName);
+                setResult(1);
+                Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        } else if (item.getItemId() == R.id.more) {
+            openDetail();
+            return true;
+        } else if (item.getItemId() == android.R.id.home) {
+            supportFinishAfterTransition();
+            Log.d(">>>>====----> Detail", "onOptionsItemSelected.android.R.id.home");
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

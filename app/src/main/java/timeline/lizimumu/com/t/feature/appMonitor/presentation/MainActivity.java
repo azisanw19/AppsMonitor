@@ -230,22 +230,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AppItem info = mAdapter.getItemInfoByPosition(item.getOrder());
-        switch (item.getItemId()) {
-            case R.id.ignore:
-                DbIgnoreExecutor.getInstance().insertItem(info);
-                process();
-                Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.open:
-                startActivity(mPackageManager.getLaunchIntentForPackage(info.mPackageName));
-                return true;
-            case R.id.more:
-                Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + info.mPackageName));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onContextItemSelected(item);
+        if (item.getItemId() == R.id.ignore) {
+            DbIgnoreExecutor.getInstance().insertItem(info);
+            process();
+            Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (item.getItemId() == R.id.open) {
+            startActivity(mPackageManager.getLaunchIntentForPackage(info.mPackageName));
+            return true;
+        } else if (item.getItemId() == R.id.more) {
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + info.mPackageName));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
         }
     }
 
@@ -258,15 +257,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), 1);
-                return true;
-            case R.id.sort:
-                triggerSort();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.settings) {
+            startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), 1);
+            return true;
+        } else if (item.getItemId() == R.id.sort) {
+            triggerSort();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
