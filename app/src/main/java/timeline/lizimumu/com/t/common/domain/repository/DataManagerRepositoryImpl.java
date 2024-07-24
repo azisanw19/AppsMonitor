@@ -1,6 +1,9 @@
 package timeline.lizimumu.com.t.common.domain.repository;
 
-import timeline.lizimumu.com.t.common.data.DataManager;
+import java.util.List;
+
+import timeline.lizimumu.com.t.common.domain.model.AppItem;
+import timeline.lizimumu.com.t.common.data.service.DataManager;
 import timeline.lizimumu.com.t.common.data.repository.DataManagerRepository;
 
 public class DataManagerRepositoryImpl implements DataManagerRepository {
@@ -13,6 +16,16 @@ public class DataManagerRepositoryImpl implements DataManagerRepository {
 
     public boolean hasPermission() {
         return dataManager.hasPermission();
+    }
+
+    @Override
+    public List<AppItem> getApps(int sort, int offset) {
+        return dataManager.getApps(sort, offset);
+    }
+
+    @Override
+    public List<AppItem> getTargetAppTimeline(String target, int offset) {
+        return dataManager.getTargetAppTimeline(target, offset);
     }
 
 }

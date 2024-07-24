@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import timeline.lizimumu.com.t.BuildConfig;
-import timeline.lizimumu.com.t.common.data.AppItem;
+import timeline.lizimumu.com.t.common.domain.model.AppItem;
 import timeline.lizimumu.com.t.common.data.repository.MonitoringRepository;
 
 
@@ -19,7 +20,7 @@ public class IgnoreExecutorViewModel extends ViewModel {
 
     private final MonitoringRepository mMonitoringRepository;
 
-    public final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     public final MutableLiveData<Boolean> operationSuccess = new MutableLiveData<>();
     public final MutableLiveData<String> operationError = new MutableLiveData<>();
 
@@ -42,6 +43,7 @@ public class IgnoreExecutorViewModel extends ViewModel {
                     return true;
                 })
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         result -> {
                             operationSuccess.postValue(true);

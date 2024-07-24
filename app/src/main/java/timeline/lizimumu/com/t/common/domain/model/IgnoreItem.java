@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.common.data;
+package timeline.lizimumu.com.t.common.domain.model;
 
 /**
  * Ignore

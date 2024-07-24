@@ -3,18 +3,10 @@ package timeline.lizimumu.com.t.app;
 import android.app.Application;
 import android.content.Intent;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import timeline.lizimumu.com.t.AppConst;
-import timeline.lizimumu.com.t.BuildConfig;
-import timeline.lizimumu.com.t.common.data.AppItem;
-import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.common.data.service.DataManager;
 import timeline.lizimumu.com.t.common.data.source.db.DbHistoryExecutor;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
-import timeline.lizimumu.com.t.common.presentation.viewModel.IgnoreExecutorViewModel;
 import timeline.lizimumu.com.t.di.AppModule;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.CrashHandler;
@@ -42,7 +34,7 @@ public class MyApplication extends Application {
         AppModule appModule = AppModule.getInstance();
         appModule.register(PreferenceManager.getInstance());
         appModule.register(DbIgnoreExecutor.getInstance());
-
+        appModule.register(DbHistoryExecutor.getInstance());
         appModule.register(DataManager.getInstance());
     }
 }

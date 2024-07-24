@@ -1,13 +1,12 @@
 package timeline.lizimumu.com.t.di;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.common.data.service.DataManager;
 import timeline.lizimumu.com.t.common.data.repository.DataManagerRepository;
 import timeline.lizimumu.com.t.common.data.repository.MonitoringRepository;
+import timeline.lizimumu.com.t.common.data.source.db.DbHistoryExecutor;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 import timeline.lizimumu.com.t.common.domain.repository.DataManagerRepositoryImpl;
@@ -22,6 +21,8 @@ public class AppModule {
     private static PreferenceManager mPreferenceManager = null;
     @Nullable
     private static DataManager mDataManager = null;
+    @Nullable
+    private static DbHistoryExecutor mDbHistoryExecutor = null;
 
     private AppModule() {
 
@@ -66,6 +67,17 @@ public class AppModule {
 
     public void register(DataManager dataManager) {
         mDataManager = dataManager;
+    }
+
+    public @NonNull DbHistoryExecutor getDbHistoryExecutor() throws RuntimeException {
+        if (mDbHistoryExecutor != null)
+            return mDbHistoryExecutor;
+
+        throw new RuntimeException("DbHistoryExecutor not been registered");
+    }
+
+    public void register(DbHistoryExecutor dbHistoryExecutor) {
+        mDbHistoryExecutor = dbHistoryExecutor;
     }
 
     public MonitoringRepository getMonitoringRepository() {

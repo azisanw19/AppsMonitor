@@ -1,7 +1,6 @@
 package timeline.lizimumu.com.t.feature.appMonitor.presentation;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.app.usage.UsageEvents;
@@ -41,13 +40,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,9 +56,10 @@ import java.util.Locale;
 
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.common.data.AppItem;
-import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.common.domain.model.AppItem;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.presentation.viewModel.MonitoringAppsTargetViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.BitmapUtil;
 import timeline.lizimumu.com.t.util.SortEnum;
@@ -75,9 +76,15 @@ public class DetailActivity extends AppCompatActivity {
     private ProgressBar mProgress;
     private int mDay;
 
+    private MonitoringAppsTargetViewModel monitoringAppsTargetViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory();
+        monitoringAppsTargetViewModel = new ViewModelProvider(this, viewModelFactory).get(MonitoringAppsTargetViewModel.class);
+
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
         setContentView(R.layout.activity_detail);
@@ -135,7 +142,7 @@ public class DetailActivity extends AppCompatActivity {
             mAdapter = new MyAdapter();
             mList.setAdapter(mAdapter);
             // load
-            new MyAsyncTask(this).execute(mPackageName);
+            monitoringAppsTargetViewModel.getTargetAppTimeline(mPackageName, mDay);
             // data
             mData = findViewById(R.id.data);
             new MyDataAsyncTask().execute(mPackageName);
@@ -164,6 +171,8 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
         }
+
+        observeData();
     }
 
     @Override
@@ -342,23 +351,10 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class MyAsyncTask extends AsyncTask<String, Void, List<AppItem>> {
-
-        private WeakReference<Context> mContext;
-
-        MyAsyncTask(Context context) {
-            mContext = new WeakReference<>(context);
-        }
-
-        @Override
-        protected List<AppItem> doInBackground(String... strings) {
-            return DataManager.getInstance().getTargetAppTimeline(mContext.get(), strings[0], mDay);
-        }
-
-        @Override
-        protected void onPostExecute(List<AppItem> appItems) {
-            if (mContext.get() != null) {
+    private void observeData() {
+        monitoringAppsTargetViewModel.operationSuccess.observe(this, new Observer<List<AppItem>>() {
+            @Override
+            public void onChanged(List<AppItem> appItems) {
                 List<AppItem> newList = new ArrayList<>();
                 long duration = 0;
                 for (AppItem item : appItems) {
@@ -376,7 +372,7 @@ public class DetailActivity extends AppCompatActivity {
                 mTime.setText(String.format(getResources().getString(R.string.times), AppUtil.formatMilliSeconds(duration), appItems.get(appItems.size() - 1).mCount));
                 mAdapter.setData(newList);
             }
-        }
+        });
     }
 
 

@@ -17,6 +17,12 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(CheckPermissionDataViewModel.class)) {
             return (T) new CheckPermissionDataViewModel(AppModule.getInstance().getDataManagerRepository());
         }
+        if (modelClass.isAssignableFrom(MonitoringAppsViewModel.class)) {
+            return (T) new MonitoringAppsViewModel(AppModule.getInstance().getDataManagerRepository());
+        }
+        if (modelClass.isAssignableFrom(MonitoringAppsTargetViewModel.class)) {
+            return (T) new MonitoringAppsTargetViewModel(AppModule.getInstance().getDataManagerRepository());
+        }
 
         return ViewModelProvider.Factory.super.create(modelClass);
     }

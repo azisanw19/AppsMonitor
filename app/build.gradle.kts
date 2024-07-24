@@ -70,4 +70,8 @@ dependencies {
 
     // reactivex
     implementation(libs.reactivex.rxjava)
+    implementation(libs.reactivex.rxandroid)
+
+    // background process
+    implementation(libs.androidx.work.runtime)
 }

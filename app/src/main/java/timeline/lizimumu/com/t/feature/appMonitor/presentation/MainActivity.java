@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.util.Log;
@@ -44,16 +43,17 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.common.data.AppItem;
-import timeline.lizimumu.com.t.common.data.DataManager;
+import timeline.lizimumu.com.t.common.domain.model.AppItem;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.common.presentation.viewModel.CheckPermissionDataViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.MonitoringAppsViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.feature.settings.presentation.SettingsActivity;
 import timeline.lizimumu.com.t.service.AlarmService;
@@ -76,8 +76,12 @@ public class MainActivity extends AppCompatActivity {
     private PackageManager mPackageManager;
 
     private CheckPermissionDataViewModel checkPermissionDataViewModel;
+    private MonitoringAppsViewModel monitoringAppsViewModel;
+
     @NonNull
     private Boolean hasPermission = false;
+    @NonNull
+    private List<AppItem> listAppItem = Collections.emptyList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         ViewModelFactory viewModelFactory = new ViewModelFactory();
         checkPermissionDataViewModel = new ViewModelProvider(this, viewModelFactory).get(CheckPermissionDataViewModel.class);
         checkPermissionDataViewModel.hasPermission();
+
+        monitoringAppsViewModel = new ViewModelProvider(this, viewModelFactory).get(MonitoringAppsViewModel.class);
 
         // https://guides.codepath.com/android/Shared-Element-Activity-Transition
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -237,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
             mList.setVisibility(View.INVISIBLE);
             int sortInt = PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT);
             mSortName.setText(getSortName(sortInt));
-            new MyAsyncTask().execute(sortInt, mDay);
+            monitoringAppsViewModel.getApps(sortInt, mDay);
         }
     }
 
@@ -414,34 +420,34 @@ public class MainActivity extends AppCompatActivity {
                 setData();
             }
         });
-    }
 
-    @SuppressLint("StaticFieldLeak")
-    class MyAsyncTask extends AsyncTask<Integer, Void, List<AppItem>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mSwipe.setRefreshing(true);
-        }
-
-        @Override
-        protected List<AppItem> doInBackground(Integer... integers) {
-            return DataManager.getInstance().getApps(getApplicationContext(), integers[0], integers[1]);
-        }
-
-        @Override
-        protected void onPostExecute(List<AppItem> appItems) {
-            mList.setVisibility(View.VISIBLE);
-            mTotal = 0;
-            for (AppItem item : appItems) {
-                if (item.mUsageTime <= 0) continue;
-                mTotal += item.mUsageTime;
-                item.mCanOpen = mPackageManager.getLaunchIntentForPackage(item.mPackageName) != null;
+        monitoringAppsViewModel.operationSuccess.observe(this, new Observer<List<AppItem>>() {
+            @Override
+            public void onChanged(List<AppItem> appItems) {
+                mList.setVisibility(View.VISIBLE);
+                mTotal = 0;
+                for (AppItem item : appItems) {
+                    if (item.mUsageTime <= 0) continue;
+                    mTotal += item.mUsageTime;
+                    item.mCanOpen = mPackageManager.getLaunchIntentForPackage(item.mPackageName) != null;
+                }
+                mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(mTotal)));
+                mAdapter.updateData(appItems);
             }
-            mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(mTotal)));
-            mSwipe.setRefreshing(false);
-            mAdapter.updateData(appItems);
-        }
+        });
+
+        monitoringAppsViewModel.operationLoading.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                mSwipe.setRefreshing(aBoolean);
+            }
+        });
+
+        monitoringAppsViewModel.operationError.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -1,6 +1,6 @@
 package timeline.lizimumu.com.t.common.domain.repository;
 
-import timeline.lizimumu.com.t.common.data.AppItem;
+import timeline.lizimumu.com.t.common.domain.model.AppItem;
 import timeline.lizimumu.com.t.common.data.repository.MonitoringRepository;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 

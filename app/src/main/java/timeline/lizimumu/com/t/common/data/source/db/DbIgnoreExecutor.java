@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import timeline.lizimumu.com.t.common.data.AppItem;
-import timeline.lizimumu.com.t.common.data.IgnoreItem;
+import timeline.lizimumu.com.t.common.domain.model.AppItem;
+import timeline.lizimumu.com.t.common.domain.model.IgnoreItem;
 
 /**
  * Database Entry

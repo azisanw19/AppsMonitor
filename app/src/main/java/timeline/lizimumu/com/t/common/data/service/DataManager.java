@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.common.data;
+package timeline.lizimumu.com.t.common.data.service;
 
 import android.Manifest;
 import android.app.AppOpsManager;
@@ -29,6 +29,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
+import timeline.lizimumu.com.t.common.domain.model.AppItem;
+import timeline.lizimumu.com.t.common.domain.model.IgnoreItem;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 import timeline.lizimumu.com.t.util.AppUtil;
@@ -73,9 +75,9 @@ public class DataManager {
         return false;
     }
 
-    public List<AppItem> getTargetAppTimeline(Context context, String target, int offset) {
+    public List<AppItem> getTargetAppTimeline(String target, int offset) {
         List<AppItem> items = new ArrayList<>();
-        UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+        UsageStatsManager manager = (UsageStatsManager) mContext.getSystemService(Context.USAGE_STATS_SERVICE);
         if (manager != null) {
 
             long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset));
@@ -84,7 +86,7 @@ public class DataManager {
 
             AppItem item = new AppItem();
             item.mPackageName = target;
-            item.mName = AppUtil.parsePackageName(context.getPackageManager(), target);
+            item.mName = AppUtil.parsePackageName(mContext.getPackageManager(), target);
 
             // 缓存
             ClonedEvent prevEndEvent = null;
@@ -132,11 +134,11 @@ public class DataManager {
         return items;
     }
 
-    public List<AppItem> getApps(Context context, int sort, int offset) {
+    public List<AppItem> getApps(int sort, int offset) {
 
         List<AppItem> items = new ArrayList<>();
         List<AppItem> newList = new ArrayList<>();
-        UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+        UsageStatsManager manager = (UsageStatsManager) mContext.getSystemService(Context.USAGE_STATS_SERVICE);
         if (manager != null) {
             // 缓存变量
             String prevPackage = "";
@@ -198,15 +200,15 @@ public class DataManager {
             Map<String, Long> mobileData = new HashMap<>();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 valid = true;
-                NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
-                TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                mobileData = getMobileData(context, telephonyManager, networkStatsManager, offset);
+                NetworkStatsManager networkStatsManager = (NetworkStatsManager) mContext.getSystemService(Context.NETWORK_STATS_SERVICE);
+                TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+                mobileData = getMobileData(mContext, telephonyManager, networkStatsManager, offset);
             }
 
             boolean hideSystem = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_SYSTEM_APPS);
             boolean hideUninstall = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS);
             List<IgnoreItem> ignoreItems = DbIgnoreExecutor.getInstance().getAllItems();
-            PackageManager packageManager = context.getPackageManager();
+            PackageManager packageManager = mContext.getPackageManager();
             for (AppItem item : items) {
                 if (!AppUtil.openable(packageManager, item.mPackageName)) {
                     continue;
