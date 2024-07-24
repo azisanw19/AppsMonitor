@@ -80,7 +80,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="17dp"
-            android:text="@string/hide_uninstall_apps"
+            android:text="@string/hide_openable_apps"
             android:textSize="16sp" />
 
         <Switch
