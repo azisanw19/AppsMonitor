@@ -37,6 +37,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -50,13 +53,13 @@ import java.util.Locale;
 
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
+import timeline.lizimumu.com.t.common.data.service.AlarmService;
 import timeline.lizimumu.com.t.common.domain.model.AppItem;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.common.presentation.viewModel.CheckPermissionDataViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.MonitoringAppsViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.feature.settings.presentation.SettingsActivity;
-import timeline.lizimumu.com.t.service.AlarmService;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
@@ -124,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (hasPermission) {
             process(hasPermission);
-            startService(new Intent(MainActivity.this, AlarmService.class));
+            WorkRequest workRequest = new OneTimeWorkRequest.Builder(AlarmService.class).build();
+            WorkManager.getInstance(this).enqueue(workRequest);
         }
     }
 
@@ -424,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
         monitoringAppsViewModel.operationSuccess.observe(this, new Observer<List<AppItem>>() {
             @Override
             public void onChanged(List<AppItem> appItems) {
+                Log.d("MainActivity", "onChanged: " + appItems.size());
                 mList.setVisibility(View.VISIBLE);
                 mTotal = 0;
                 for (AppItem item : appItems) {

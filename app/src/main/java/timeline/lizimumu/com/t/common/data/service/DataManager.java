@@ -205,12 +205,14 @@ public class DataManager {
                 mobileData = getMobileData(mContext, telephonyManager, networkStatsManager, offset);
             }
 
+            boolean hideOpenable = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_OPENABLE);
             boolean hideSystem = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_SYSTEM_APPS);
             boolean hideUninstall = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS);
             List<IgnoreItem> ignoreItems = DbIgnoreExecutor.getInstance().getAllItems();
             PackageManager packageManager = mContext.getPackageManager();
+            Log.d("DataManager", "hideOpenable " + hideOpenable);
             for (AppItem item : items) {
-                if (!AppUtil.openable(packageManager, item.mPackageName)) {
+                if (hideOpenable) {
                     continue;
                 }
                 if (hideSystem && AppUtil.isSystemApp(packageManager, item.mPackageName)) {

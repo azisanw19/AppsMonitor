@@ -4,7 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import timeline.lizimumu.com.t.service.AlarmService;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
+import timeline.lizimumu.com.t.common.data.service.AlarmService;
 
 /**
  * Alarm receiver
@@ -15,6 +19,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        context.startService(new Intent(context, AlarmService.class));
+        WorkRequest workRequest = new OneTimeWorkRequest.Builder(AlarmService.class).build();
+        WorkManager.getInstance(context).enqueue(workRequest);
     }
 }
