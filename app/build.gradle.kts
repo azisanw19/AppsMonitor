@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "timeline.lizimumu.com.t"
         minSdk = 22
-        targetSdk = 35
+        targetSdk = 29
         versionCode = 29
         versionName = "1.9.2"
 

@@ -210,9 +210,8 @@ public class DataManager {
             boolean hideUninstall = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS);
             List<IgnoreItem> ignoreItems = DbIgnoreExecutor.getInstance().getAllItems();
             PackageManager packageManager = mContext.getPackageManager();
-            Log.d("DataManager", "hideOpenable " + hideOpenable);
             for (AppItem item : items) {
-                if (hideOpenable) {
+                if (hideOpenable && !AppUtil.openable(packageManager, item.mPackageName)) {
                     continue;
                 }
                 if (hideSystem && AppUtil.isSystemApp(packageManager, item.mPackageName)) {
