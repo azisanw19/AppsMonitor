@@ -29,6 +29,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(DeleteIgnoreExecutorViewModel.class)) {
             return (T) new DeleteIgnoreExecutorViewModel(AppModule.getInstance().getMonitoringRepository());
         }
+        if (modelClass.isAssignableFrom(PreferenceViewModel.class)) {
+            return (T) new PreferenceViewModel(AppModule.getInstance().getPreferenceRepository());
+        }
 
         return ViewModelProvider.Factory.super.create(modelClass);
     }

@@ -3,6 +3,7 @@ package timeline.lizimumu.com.t.di;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import timeline.lizimumu.com.t.common.data.repository.PreferenceRepository;
 import timeline.lizimumu.com.t.common.data.service.DataManager;
 import timeline.lizimumu.com.t.common.data.repository.DataManagerRepository;
 import timeline.lizimumu.com.t.common.data.repository.MonitoringRepository;
@@ -11,6 +12,7 @@ import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 import timeline.lizimumu.com.t.common.domain.repository.DataManagerRepositoryImpl;
 import timeline.lizimumu.com.t.common.domain.repository.MonitoringRepositoryImpl;
+import timeline.lizimumu.com.t.common.domain.repository.PreferenceRepositoryImpl;
 
 public class AppModule {
 
@@ -86,5 +88,9 @@ public class AppModule {
 
     public DataManagerRepository getDataManagerRepository() {
         return new DataManagerRepositoryImpl(getDataManager());
+    }
+
+    public PreferenceRepository getPreferenceRepository() {
+        return new PreferenceRepositoryImpl(getPreferenceManager());
     }
 }

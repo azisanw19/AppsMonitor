@@ -58,11 +58,11 @@ import timeline.lizimumu.com.t.common.domain.model.AppItem;
 import timeline.lizimumu.com.t.common.presentation.viewModel.CheckPermissionDataViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.IgnoreExecutorViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.MonitoringAppsViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.PreferenceViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.feature.settings.presentation.SettingsActivity;
 import timeline.lizimumu.com.t.common.data.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
-import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,11 +81,12 @@ public class MainActivity extends AppCompatActivity {
     private CheckPermissionDataViewModel checkPermissionDataViewModel;
     private MonitoringAppsViewModel monitoringAppsViewModel;
     private IgnoreExecutorViewModel ignoreExecutorViewModel;
+    private PreferenceViewModel preferenceViewModel;
 
     @NonNull
     private Boolean hasPermission = false;
     @NonNull
-    private List<AppItem> listAppItem = Collections.emptyList();
+    private Integer mSortInt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         monitoringAppsViewModel = new ViewModelProvider(this, viewModelFactory).get(MonitoringAppsViewModel.class);
         ignoreExecutorViewModel = new ViewModelProvider(this, viewModelFactory).get(IgnoreExecutorViewModel.class);
+        preferenceViewModel = new ViewModelProvider(this, viewModelFactory).get(PreferenceViewModel.class);
 
         // https://guides.codepath.com/android/Shared-Element-Activity-Transition
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -164,11 +166,10 @@ public class MainActivity extends AppCompatActivity {
     private void triggerSort() {
         mDialog = new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.sort)
-                .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(R.array.sort, mSortInt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
-                        process(hasPermission);
+                        preferenceViewModel.setPreferenceListSort(i);
                         mDialog.dismiss();
                     }
                 })
@@ -247,9 +248,8 @@ public class MainActivity extends AppCompatActivity {
     private void process(Boolean hasPermission) {
         if (hasPermission) {
             mList.setVisibility(View.INVISIBLE);
-            int sortInt = PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT);
-            mSortName.setText(getSortName(sortInt));
-            monitoringAppsViewModel.getApps(sortInt, mDay);
+            mSortName.setText(getSortName(mSortInt));
+            monitoringAppsViewModel.getApps(mSortInt, mDay);
         }
     }
 
@@ -460,6 +460,14 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(Boolean aBoolean) {
                 process(hasPermission);
                 Toast.makeText(MainActivity.this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        preferenceViewModel.preferenceListSort.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                mSortInt = integer;
+                process(hasPermission);
             }
         });
     }

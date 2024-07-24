@@ -67,6 +67,32 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/group_openable"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_settings_item"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="17dp"
+            android:text="@string/hide_uninstall_apps"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/switch_openable_appps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/group_ignore"
         android:layout_width="match_parent"
         android:layout_height="56dp"
