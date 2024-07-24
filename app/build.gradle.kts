@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "timeline.lizimumu.com.t"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "timeline.lizimumu.com.t"
         minSdk = 22
-        targetSdk = 29
+        targetSdk = 35
         versionCode = 29
         versionName = "1.9.2"
 

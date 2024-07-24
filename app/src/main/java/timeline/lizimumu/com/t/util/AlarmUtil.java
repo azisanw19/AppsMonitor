@@ -18,7 +18,7 @@ public class AlarmUtil {
         if (alarmManager != null) {
             long start = System.currentTimeMillis();
             Intent in = new Intent("ALARM_RECEIVER");
-            PendingIntent pi = PendingIntent.getBroadcast(context, 0, in, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, in, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, start + 86400 * 1000, pi);
         }
     }

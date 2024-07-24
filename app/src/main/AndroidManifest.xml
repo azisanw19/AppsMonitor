@@ -21,8 +21,10 @@
             android:launchMode="singleTask"
             android:exported="false" />
 
-        <service android:name=".service.AppService" />
-        <service android:name=".service.AlarmService" />
+        <service android:name=".service.AppService"
+            android:foregroundServiceType="dataSync" />
+        <service android:name=".service.AlarmService"
+            android:foregroundServiceType="dataSync" />
         <receiver
             android:name=".receiver.AlarmReceiver"
             android:exported="true">
