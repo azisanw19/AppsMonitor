@@ -55,8 +55,8 @@ import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.common.data.service.AlarmService;
 import timeline.lizimumu.com.t.common.domain.model.AppItem;
-import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.common.presentation.viewModel.CheckPermissionDataViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.IgnoreExecutorViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.MonitoringAppsViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.feature.settings.presentation.SettingsActivity;
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CheckPermissionDataViewModel checkPermissionDataViewModel;
     private MonitoringAppsViewModel monitoringAppsViewModel;
+    private IgnoreExecutorViewModel ignoreExecutorViewModel;
 
     @NonNull
     private Boolean hasPermission = false;
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         checkPermissionDataViewModel.hasPermission();
 
         monitoringAppsViewModel = new ViewModelProvider(this, viewModelFactory).get(MonitoringAppsViewModel.class);
+        ignoreExecutorViewModel = new ViewModelProvider(this, viewModelFactory).get(IgnoreExecutorViewModel.class);
 
         // https://guides.codepath.com/android/Shared-Element-Activity-Transition
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -260,9 +262,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AppItem info = mAdapter.getItemInfoByPosition(item.getOrder());
         if (item.getItemId() == R.id.ignore) {
-            DbIgnoreExecutor.getInstance().insertItem(info);
-            process(hasPermission);
-            Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
+            ignoreExecutorViewModel.addIgnoreAppsToDB(info);
             return true;
         } else if (item.getItemId() == R.id.open) {
             startActivity(mPackageManager.getLaunchIntentForPackage(info.mPackageName));
@@ -452,6 +452,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ignoreExecutorViewModel.operationSuccess.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                process(hasPermission);
+                Toast.makeText(MainActivity.this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -23,6 +23,12 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(MonitoringAppsTargetViewModel.class)) {
             return (T) new MonitoringAppsTargetViewModel(AppModule.getInstance().getDataManagerRepository());
         }
+        if (modelClass.isAssignableFrom(ListIgnoreAppsViewModel.class)) {
+            return (T) new ListIgnoreAppsViewModel(AppModule.getInstance().getMonitoringRepository());
+        }
+        if (modelClass.isAssignableFrom(DeleteIgnoreExecutorViewModel.class)) {
+            return (T) new DeleteIgnoreExecutorViewModel(AppModule.getInstance().getMonitoringRepository());
+        }
 
         return ViewModelProvider.Factory.super.create(modelClass);
     }

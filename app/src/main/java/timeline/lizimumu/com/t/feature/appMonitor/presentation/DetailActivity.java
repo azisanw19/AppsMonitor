@@ -57,7 +57,7 @@ import java.util.Locale;
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.common.domain.model.AppItem;
-import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.presentation.viewModel.IgnoreExecutorViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.MonitoringAppsTargetViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.util.AppUtil;
@@ -77,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
     private int mDay;
 
     private MonitoringAppsTargetViewModel monitoringAppsTargetViewModel;
+    private IgnoreExecutorViewModel ignoreExecutorViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class DetailActivity extends AppCompatActivity {
 
         ViewModelFactory viewModelFactory = new ViewModelFactory();
         monitoringAppsTargetViewModel = new ViewModelProvider(this, viewModelFactory).get(MonitoringAppsTargetViewModel.class);
+        ignoreExecutorViewModel = new ViewModelProvider(this, viewModelFactory).get(IgnoreExecutorViewModel.class);
 
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
@@ -187,9 +189,7 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.ignore) {
             if (!TextUtils.isEmpty(mPackageName)) {
-                DbIgnoreExecutor.getInstance().insertItem(mPackageName);
-                setResult(1);
-                Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
+                ignoreExecutorViewModel.addIgnoreAppsToDB(mPackageName);
             }
             return true;
         } else if (item.getItemId() == R.id.more) {
@@ -371,6 +371,14 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 mTime.setText(String.format(getResources().getString(R.string.times), AppUtil.formatMilliSeconds(duration), appItems.get(appItems.size() - 1).mCount));
                 mAdapter.setData(newList);
+            }
+        });
+
+        ignoreExecutorViewModel.operationSuccess.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                setResult(1);
+                Toast.makeText(DetailActivity.this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
             }
         });
     }

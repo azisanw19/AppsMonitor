@@ -1,11 +1,10 @@
 package timeline.lizimumu.com.t.feature.settings.presentation;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,17 +23,26 @@ import java.util.Locale;
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.common.domain.model.IgnoreItem;
-import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.common.presentation.viewModel.DeleteIgnoreExecutorViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.ListIgnoreAppsViewModel;
+import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.util.AppUtil;
 
 public class IgnoreActivity extends AppCompatActivity {
 
     private IgnoreAdapter mAdapter;
 
+    private ListIgnoreAppsViewModel listIgnoreAppsViewModel;
+    private DeleteIgnoreExecutorViewModel deleteIgnoreExecutorViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ignore);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory();
+        listIgnoreAppsViewModel = new ViewModelProvider(this, viewModelFactory).get(ListIgnoreAppsViewModel.class);
+        deleteIgnoreExecutorViewModel = new ViewModelProvider(this, viewModelFactory).get(DeleteIgnoreExecutorViewModel.class);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -47,33 +54,9 @@ public class IgnoreActivity extends AppCompatActivity {
         mList.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new IgnoreAdapter();
         mList.setAdapter(mAdapter);
+        observeData();
 
-        new MyAsyncTask(this).execute();
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    class MyAsyncTask extends AsyncTask<Void, Void, List<IgnoreItem>> {
-
-        private WeakReference<Context> mContext;
-
-        MyAsyncTask(Context context) {
-            mContext = new WeakReference<>(context);
-        }
-
-        @Override
-        protected List<IgnoreItem> doInBackground(Void... voids) {
-            return DbIgnoreExecutor.getInstance().getAllItems();
-        }
-
-        @Override
-        protected void onPostExecute(List<IgnoreItem> ignoreItems) {
-            if (mContext.get() != null && ignoreItems.size() > 0) {
-                for (IgnoreItem item : ignoreItems) {
-                    item.mName = AppUtil.parsePackageName(mContext.get().getPackageManager(), item.mPackageName);
-                }
-                mAdapter.setData(ignoreItems);
-            }
-        }
+        listIgnoreAppsViewModel.getAllItems();
     }
 
     class IgnoreAdapter extends RecyclerView.Adapter<IgnoreAdapter.IgnoreViewHolder> {
@@ -129,12 +112,29 @@ public class IgnoreActivity extends AppCompatActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DbIgnoreExecutor.getInstance().deleteItem(item);
-                        new MyAsyncTask(IgnoreActivity.this).execute();
+                        deleteIgnoreExecutorViewModel.deleteItem(item);
                     }
                 });
             }
         }
+    }
+
+    private void observeData() {
+        listIgnoreAppsViewModel.operationSuccess.observe(this, ignoreItems -> {
+            if (ignoreItems.size() > 0) {
+                for (IgnoreItem item : ignoreItems) {
+                    item.mName = AppUtil.parsePackageName(IgnoreActivity.this.getPackageManager(), item.mPackageName);
+                }
+                mAdapter.setData(ignoreItems);
+            }
+        });
+
+        deleteIgnoreExecutorViewModel.operationSuccess.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                listIgnoreAppsViewModel.getAllItems();
+            }
+        });
     }
 
 

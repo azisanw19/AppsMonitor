@@ -55,6 +55,42 @@ public class IgnoreExecutorViewModel extends ViewModel {
         compositeDisposable.add(disposable);
     }
 
+    public void addIgnoreAppsToDB(String packageName) {
+        Disposable disposable = Single.fromCallable(() -> {
+                    mMonitoringRepository.insertItem(packageName);
+                    return true;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        result -> {
+                            operationSuccess.postValue(true);
+                        },
+                        throwable -> {
+                            operationError.postValue(throwable.toString());
+                        }
+                );
+        compositeDisposable.add(disposable);
+    }
+
+    public void addIgnoreAppsToDB(AppItem item) {
+        Disposable disposable = Single.fromCallable(() -> {
+                    mMonitoringRepository.insertItem(item);
+                    return true;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        result -> {
+                            operationSuccess.postValue(true);
+                        },
+                        throwable -> {
+                            operationError.postValue(throwable.toString());
+                        }
+                );
+        compositeDisposable.add(disposable);
+    }
+
     @Override
     protected void onCleared() {
         compositeDisposable.clear();
