@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.service;
+package timeline.lizimumu.com.t.common.data.service;
 
 import android.app.Service;
 import android.content.ActivityNotFoundException;
@@ -16,7 +16,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.common.data.service.DataManager;
 import timeline.lizimumu.com.t.feature.appMonitor.presentation.MainActivity;
 
 public class AppService extends Service {

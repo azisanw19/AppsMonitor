@@ -60,7 +60,7 @@ import timeline.lizimumu.com.t.common.presentation.viewModel.CheckPermissionData
 import timeline.lizimumu.com.t.common.presentation.viewModel.MonitoringAppsViewModel;
 import timeline.lizimumu.com.t.common.presentation.viewModel.ViewModelFactory;
 import timeline.lizimumu.com.t.feature.settings.presentation.SettingsActivity;
-import timeline.lizimumu.com.t.service.AppService;
+import timeline.lizimumu.com.t.common.data.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 

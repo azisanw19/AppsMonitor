@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.receiver;
+package timeline.lizimumu.com.t.common.data.reveiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -23,12 +23,12 @@
             android:launchMode="singleTask"
             android:exported="false" />
 
-        <service android:name=".service.AppService"
+        <service android:name=".common.data.service.AppService"
             android:foregroundServiceType="dataSync" />
         <service android:name=".common.data.service.AlarmService"
             android:foregroundServiceType="dataSync" />
         <receiver
-            android:name=".receiver.AlarmReceiver"
+            android:name=".common.data.reveiver.AlarmReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="ALARM_RECEIVER" />

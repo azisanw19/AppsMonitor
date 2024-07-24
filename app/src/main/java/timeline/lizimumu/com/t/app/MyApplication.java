@@ -8,7 +8,7 @@ import timeline.lizimumu.com.t.common.data.service.DataManager;
 import timeline.lizimumu.com.t.common.data.source.db.DbHistoryExecutor;
 import timeline.lizimumu.com.t.common.data.source.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.di.AppModule;
-import timeline.lizimumu.com.t.service.AppService;
+import timeline.lizimumu.com.t.common.data.service.AppService;
 import timeline.lizimumu.com.t.util.CrashHandler;
 import timeline.lizimumu.com.t.common.data.source.preference.PreferenceManager;
 
